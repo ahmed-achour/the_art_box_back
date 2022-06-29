@@ -45,7 +45,7 @@ const upload = multer({
   }
 });
 
-app.post('/',[upload.single('picture'),isAuthorized], async (req, res) => {
+app.post('/',[upload.single('picture')], async (req, res) => {
     try {
        let data= req.body
        let file = req.file
@@ -80,7 +80,7 @@ app.get('/:id', async (req, res) => {
      } 
 })
 
-app.patch('/:id',[upload.single('picture'),isAuthorized], async (req, res) => {
+app.patch('/:id',[upload.single('picture')], async (req, res) => {
     try {
         let id = req.params.id
         let data = req.body
@@ -100,9 +100,9 @@ app.patch('/:id',[upload.single('picture'),isAuthorized], async (req, res) => {
 app.delete('/:id', async (req, res) => {
     try {
         let id = req.params.id;
-        let section = await Trainer.findOneAndDelete({ _id: id });
-        let category = await Training.deleteMany({ section: section._id });
-        let products = await Training.deleteMany({ category: category._id });
+        let section = await Section.findOneAndDelete({ _id: id });
+        let category = await Section.deleteMany({ section: section._id });
+        let products = await Section.deleteMany({ category: category._id });
         if (section && category && products) {
           res.status(200).send({ message: "section deleted" });
         } else {
