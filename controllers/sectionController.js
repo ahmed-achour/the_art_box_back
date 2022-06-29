@@ -10,7 +10,7 @@ const app = express()
 const storage = multer.diskStorage(
   {
 
-    destination: './assets/images/trainers',
+    destination: './assets/images/sections',
 
     filename: function (req, file, cb) {
       let name = req.body.title.replace(' ', '').toLowerCase();
@@ -54,7 +54,6 @@ app.post('/',[upload.single('picture'),isAuthorized], async (req, res) => {
         description: data.description,
         image: file.filename
        })
-       l
     await section.save();
     res.status(201).send({ message: "section added successfully" });
   } catch (error) {
@@ -85,13 +84,14 @@ app.patch('/:id',[upload.single('picture'),isAuthorized], async (req, res) => {
     try {
         let id = req.params.id
         let data = req.body
+        console.log(data,req.file)
         if (req.file) {
             data.image = req.file.filename;
-            let sectionPic = await Trainer.findOne({ _id: trainerId });
+            let sectionPic = await Section.findOne({ _id: id });
             fs.unlinkSync("assets/images/sections/" + sectionPic.image);
           }
-        let user = await Section.findOne({_id:id});
-        res.status(201).send(user);
+        let user = await Section.findOneAndUpdate({_id: id}, data);
+        res.status(201).send({ message: "section updated succfully !"});
    } catch (error) {
      res.status(400).send({ message: "thers is something went wrong !", error: error });
      } 
