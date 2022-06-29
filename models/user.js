@@ -17,9 +17,20 @@ const UserSchema = new mongoose.Schema({
         required: true,
         default: "client"
     },
+    firstname:{
+        type: String,
+        required: true,
+    },
+    lastname:{
+        type: String,
+        required: true,
+    },
+    email:{
+        type: String,
+        required: true,
+    },
     name:{
         type: String,
-        unique: true,
         min:3,
         max:50
     },

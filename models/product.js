@@ -21,9 +21,17 @@ const ProductSchema = new mongoose.Schema({
         type:Number,
         required:false
     },
+    qte:{
+        type:Number,
+        required: true
+    },
     publishedBy:{
         type:String,
         required:false
+    },
+    category:{
+        type:String,
+        required:true
     }
 });
 
