@@ -39,8 +39,42 @@ app.post("/", async (req, res) => {
   }
 });
 
+
+app.post("/login", async(req, res)=>{
+  try {
+
+    let data = req.body
+    console.log(data.username)
+    let user = await User.findOne({ username: data.username })
+    console.log(user)
+    if (user) {
+      let compare = bcrypt.compareSync(data.password, user.password)
+
+      if (compare) {
+        // 1 - creation mta3 token
+        // token => crypted string <= info
+        let dataToStoreInToken = {
+          id: user._id,
+          role: user.role,
+        }
+        let myToken = jwt.sign(dataToStoreInToken, "SECRET")
+        res.set("Access-Control-Expose-Headers", ["Authorization"])
+        res.set("Authorization", myToken)
+        res.status(200).send({ message: "User Logged in !" ,myToken})
+      }
+      else
+        res.status(404).send({ message: "User not found !" })
+    }
+    else
+      res.status(404).send({ message: "User not found !" })
+
+  } catch (error) {
+    res.status(400).send({ message: "user cannot logged in !", error: error })
+  }
+})
+
 //Showl All users
-app.get("/", async (req, res) => {
+app.get("/",[isAuthorized],async (req, res) => {
   try {
     let users = await User.find();
     res.status(200).send(users);
@@ -50,7 +84,7 @@ app.get("/", async (req, res) => {
 });
 
 //filter All users
-app.get("/filter/:role", async (req, res) => {
+app.get("/filter/:role",[isAuthorized], async (req, res) => {
   try {
     let role = req.params.role;
     let users = await User.find({ role: role });
@@ -96,11 +130,18 @@ app.patch("/:id", async (req, res) => {
 app.delete("/:id",[isAuthorized], async (req, res) => {
   try {
     let id = req.params.id;
-    await User.findOneAndDelete({ _id: id });
-    res.status(404).send({ message: "user deleted" });
+    
+    let user = await User.findOneAndDelete({ _id: id });
+    if(user){
+      res.status(200).send({ message: "user deleted" });
+    }else {
+      res.status(404).send({ message: "user not found" });
+    }
+
   } catch (error) {
     res.status(400).send({ message: "something went wrong !", error: error });
   }
 });
+
 
 module.exports = app;
