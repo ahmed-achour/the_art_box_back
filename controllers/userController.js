@@ -12,21 +12,20 @@ const app = express();
 app.post("/", async (req, res) => {
   try {
     let data = req.body;
-    console.log(data);
     let checkUser = await User.findOne({ username: data.username });
     let user = new User({
-      username: data.username,
-      password: bcrypt.hashSync(data.password, bcrypt.genSaltSync(10)),
-      role: data.role,
+        username: data.username,
+        password: bcrypt.hashSync(data.password, bcrypt.genSaltSync(10)),
+        role: data.role,
 
-      firstname: data.firstname,
-      lastname: data.lastname,
-      email: data.email,
-      adress: data.adress,
-      phone: data.phone,
+        firstname: data.firstname,
+        lastname: data.lastname,
+        email: data.email,
+        adress: data.adress,
+        phone: data.phone,
 
-      name: data.name,
-      description: data.description,
+        name: data.name,
+        description: data.description,
     });
 
     if (checkUser) {
@@ -61,6 +60,7 @@ app.get("/filter/:role", async (req, res) => {
   }
 });
 
+
 app.get("/:id", async (req, res) => {
   try {
     let id = req.params.id;
@@ -83,7 +83,6 @@ app.patch("/:id", async (req, res) => {
       data.password = bcrypt.hashSync(data.password, bcrypt.genSaltSync(10));
     }
     let user = await User.findOneAndUpdate({ _id: id }, data);
-    console.log(user);
     if (user) {
       res.status(200).send({ message: "user updated" });
     } else {
@@ -94,11 +93,11 @@ app.patch("/:id", async (req, res) => {
   }
 });
 
-app.delete("/:id", async (req, res) => {
+app.delete("/:id",[isAuthorized], async (req, res) => {
   try {
     let id = req.params.id;
-    let user = await User.findOneAndDelete({ _id: id });
-    res.status(404).send({ message: "user not found" });
+    await User.findOneAndDelete({ _id: id });
+    res.status(404).send({ message: "user deleted" });
   } catch (error) {
     res.status(400).send({ message: "something went wrong !", error: error });
   }
