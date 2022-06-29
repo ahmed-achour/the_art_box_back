@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 
 const SectionSchema = new mongoose.Schema({
-    titlle:{
+    title:{
         type: String,
         required: true,
+        unique:true,
         min:8,
         max:40
     },

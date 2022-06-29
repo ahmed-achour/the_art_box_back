@@ -30,6 +30,9 @@ const userController = require("./controllers/userController");
 const categoryController = require("./controllers/categoryController");
 const blogController = require("./controllers/blogController");
 
+app.use(express.static('./assets/images'));
+app.use(express.static('./assets/images/sections'));
+
 // router
 app.use("/commande", commandeController );
 app.use("/product", productController );
