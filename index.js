@@ -20,9 +20,10 @@ app.use(express.urlencoded({
 // autorisé l'accee d'un serveur
 app.use(cors())
 
+// import controllers
+const storeController = require("./controllers/storeController")
+
 // router
-app.use("/", (req, res)=>{
-    res.status(200).send({message: "hello world"})
-});
+//app.use("/store", storeController );
 
 app.listen(port, ()=>{ console.log(`🟢 Server started on port ${port}`); })
