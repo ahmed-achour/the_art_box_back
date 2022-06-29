@@ -23,7 +23,6 @@ app.use(
 app.use(cors());
 
 // import controllers
-const storeController = require("./controllers/storeController");
 const commandeController = require("./controllers/commandeController");
 const productController = require("./controllers/productController");
 const sectionController = require("./controllers/sectionController");
@@ -32,7 +31,6 @@ const categoryController = require("./controllers/categoryController");
 const blogController = require("./controllers/blogController");
 
 // router
-app.use("/store", storeController );
 app.use("/commande", commandeController );
 app.use("/product", productController );
 app.use("/section", sectionController );
